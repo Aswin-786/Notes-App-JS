@@ -1,17 +1,18 @@
+// Get the 'add' button and attach click event listener
 const addBtn = document.getElementById("add");
+addBtn.addEventListener("click", () => {
+    addNewNote();
+});
 
+// Retrieve notes from localStorage and render them if available
 const notes = JSON.parse(localStorage.getItem("notes"));
-
 if (notes) {
     notes.forEach((note) => {
         addNewNote(note);
     });
 }
 
-addBtn.addEventListener("click", () => {
-    addNewNote();
-});
-
+// Function to add a new note
 function addNewNote(text = "") {
     const note = document.createElement("div");
     note.classList.add("note");
@@ -29,12 +30,11 @@ function addNewNote(text = "") {
 
     const editBtn = note.querySelector(".edit");
     const deleteBtn = note.querySelector(".delete");
-
     const main = note.querySelector(".main");
     const textArea = note.querySelector("textarea");
 
     textArea.value = text;
-    main.innerHTML = marked(text);
+    main.innerHTML = marked(text); // Use a markdown library to convert the text to HTML
 
     editBtn.addEventListener("click", () => {
         main.classList.toggle("hidden");
@@ -43,24 +43,21 @@ function addNewNote(text = "") {
 
     deleteBtn.addEventListener("click", () => {
         note.remove();
-
         updateLS();
     });
 
     textArea.addEventListener("input", (e) => {
         const { value } = e.target;
-
-        main.innerHTML = marked(value);
-
+        main.innerHTML = marked(value); // Update the rendered HTML when the textarea input changes
         updateLS();
     });
 
-    document.body.appendChild(note);
+    document.body.appendChild(note); // Add the new note to the body
 }
 
+// Function to update localStorage with the current notes
 function updateLS() {
     const notesText = document.querySelectorAll("textarea");
-
     const notes = [];
 
     notesText.forEach((note) => {
